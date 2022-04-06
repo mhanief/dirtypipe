@@ -1,0 +1,42 @@
+reF: https://access.redhat.com/security/vulnerabilities/RHSB-2022-002
+
+Diagnose
+A vulnerability detection script has been developed to determine if your system is currently affected by this flaw. To verify the authenticity of the script, you can download the detached OpenPGP signature as well. Instructions on how to use GPG signatures for verification are available on the Customer Portal.
+
+FAQ
+
+Q: How can this flaw modify read-only content?
+A: When a file is accessed, it gets loaded in the “cached” region of the memory (the page cache), and the attacker would be able to change the file content in the cached memory. So subsequent reads of the file will return the corrupted content.
+
+Q: Can this flaw corrupt the content of actual files on disk?
+A: It can. If a given content is in the “Dirty Page” memory region pending a write to the disk, this content would be prone to interception and modification - then the committed data to the disk would be the intercepted content.
+
+Q: Is it mitigated by SELinux?
+A: No, SELinux does not mitigate this vulnerability.
+
+Q: Are Openstack, Ceph, Satellite, etc. vulnerable?
+A: The product is not directly affected - the kernel is the affected component, and the affectedness of the system follows the RHEL version that the product is installed on.
+
+Q: Will Red Hat release a kpatch?
+A: The kpatch technology is unable to mitigate this vulnerability, thus there will be no kpatch released.
+
+Q: Why is RHEL 8 affected, but is not vulnerable?
+A: The currently know exploits depends on the functionality inserted by the upstream kernel commit f6dd97558 - which is not present in the RHEL8 kernel, hindering the exploitation.
+
+Q: Is there any configuration / user configurable clause that can be modified and change the system affectedness/vulnerability?
+A: No, there are no configuration clauses that can impact the system’s affectedness/vulnerability.
+
+Q: Is there any special requirement to carry out the exploit?
+A: The attacker must be a local user with execution privileges in the system.
+Acknowledgments
+
+Red Hat thanks Max Kellermann (CM4all) for reporting this vulnerability
+References
+
+https://www.openwall.com/lists/oss-security/2022/03/07/1
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/lib/iov_iter.c?id=9d2231c5d74e13b2a0546fee6737ee4446017903
+
+https://dirtypipe.cm4all.com/
+
+How to use GPG to verify signed content from Product Security
